@@ -18,12 +18,21 @@ function PDFViewer() {
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-
+  const [pdfLoaded, setPdfLoaded] = useState(false);
   useEffect(() => {
     const menuRef = ref(storage, "menu.pdf");
     getDownloadURL(menuRef)
       .then((url) => {
-        setMenuUrl(url);
+        const loadingTask = pdfjs.getDocument(url);
+        loadingTask.promise
+          .then((pdf) => {
+            setNumPages(pdf.numPages);
+            setPdfLoaded(true); // PDF is loaded
+          })
+          .catch((err) => {
+            setError(err.message);
+          });
+          setMenuUrl(url);
       })
       .catch((error) => {
         setError(error.message);
@@ -82,12 +91,14 @@ function PDFViewer() {
             <div
               className="custom-document"
             >
+              <div style={{ display: pdfLoaded ? "block" : "none" }}>
                <Document file={menuUrl} onLoadSuccess={onDocumentLoadSuccess}>
               <Page scale={0.70} pageNumber={currentPage} />
             </Document>
-            {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                <Viewer fileUrl={menuUrl} scale={0.75} pageNumber={currentPage} onLoadSuccess={onDocumentLoadSuccess}/>
-              </Worker> */}
+            </div>
+            <div style={{ display: pdfLoaded ? "none" : "block" }}>
+        Loading...
+      </div>
             </div>
             </div>
           </>
