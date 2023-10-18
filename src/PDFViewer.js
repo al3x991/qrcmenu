@@ -1,64 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import firebase from "firebase/app";
-import "firebase/storage";
+import { getDownloadURL, ref } from "firebase/storage";
+import storage from "./config/firebase";
+import Image from "./logo.jpg";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Form from "./Form"
+// import { Worker } from '@react-pdf-viewer/core';
+// // Import the main component
+// import { Viewer } from '@react-pdf-viewer/core';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+// Import the styles
+// import '@react-pdf-viewer/core/lib/styles/index.css';
+// Set the worker source explicitly
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function PDFViewer({ pdfUrl }) {
+function PDFViewer() {
+  const [menuUrl, setMenuUrl] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-
+  const [pdfLoaded, setPdfLoaded] = useState(false);
   useEffect(() => {
-    const firebaseConfig = {
-        apiKey: "AIzaSyB0SlXwzuD4e6U1i8sQESX2PVCClesA1vU",
-        authDomain: "lagospoloclub-6f778.firebaseapp.com",
-        projectId: "lagospoloclub-6f778",
-        storageBucket: "lagospoloclub-6f778.appspot.com",
-        messagingSenderId: "337139075063",
-        appId: "1:337139075063:web:860a247eb38746641450f2"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    const storage = firebase.storage();
-    const storageRef = storage.ref("menu.pdf");
-
-    // Get the download URL for 'menu.pdf' from Firebase Storage
-    storageRef
-      .getDownloadURL()
+    const menuRef = ref(storage, "menu.pdf");
+    getDownloadURL(menuRef)
       .then((url) => {
-        fetch(url)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(
-                `Failed to fetch: ${response.status} ${response.statusText}`
-              );
-            }
-            return response.blob();
-          })
-          .then((blob) => {
-            const reader = new FileReader();
-            reader.onload = function () {
-              pdfjs
-                .getDocument(new Uint8Array(reader.result))
-                .promise.then((pdf) => {
-                  setNumPages(pdf.numPages);
-                });
-            };
-            reader.readAsArrayBuffer(blob);
+        const loadingTask = pdfjs.getDocument(url);
+        loadingTask.promise
+          .then((pdf) => {
+            setNumPages(pdf.numPages);
+            setPdfLoaded(true); // PDF is loaded
           })
           .catch((err) => {
             setError(err.message);
           });
+          setMenuUrl(url);
       })
-      .catch((err) => {
-        setError(err.message);
+      .catch((error) => {
+        setError(error.message);
       });
   }, []);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
 
   const goToPreviousPage = () => {
     if (currentPage > 1) {
@@ -73,20 +58,41 @@ function PDFViewer({ pdfUrl }) {
   };
 
   return (
-    <div className="p-2">
-      <div
-        className="w-full mx-auto max-w-xl p-4 border rounded-lg shadow-lg"
-        style={{ height: "800px" }}
-      >
+    <>
+      <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/edit-QRC">Edit Menu</Link>
+            </li>
+          </ul>
+        </nav>
+        <Routes>
+          <Route path="/edit-QRC" element={<Form />} />
+        </Routes>
+      </div>
+    </Router>
+    <div className="container">
+      <div className="wrapper">
+      <div className="logo">
+      <LazyLoadImage src={Image}
+        width={100} height={100}
+        alt="Image Alt"
+      />
+     </div>
         {error ? (
-          <div className="text-red-500">{error}</div>
+          <div className="custom-error">{error}</div>
         ) : (
           <>
-            <div className="mb-4 text-center">
+            <div className="text-center">
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
-                className="mr-2 px-3 py-2 bg-indigo-900 text-white rounded"
+                className="custom-button"
               >
                 Previous Page
               </button>
@@ -96,42 +102,30 @@ function PDFViewer({ pdfUrl }) {
               <button
                 onClick={goToNextPage}
                 disabled={currentPage === numPages}
-                className="ml-2 px-3 py-2 bg-indigo-900 text-white rounded"
+                className="custom-button"
               >
                 Next Page
               </button>
             </div>
+            <div className="custom-border">
             <div
-              className="p-2 px-2 flex justify-center w-full mx-auto"
-              style={{ height: "610px", overflow: "hidden" }}
+              className="custom-document"
             >
-              <Document file={pdfUrl}>
-                <Page scale={0.75} pageNumber={currentPage} />
-              </Document>
+              <div style={{ display: pdfLoaded ? "block" : "none" }}>
+               <Document file={menuUrl} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page scale={0.70} pageNumber={currentPage} />
+            </Document>
             </div>
-            <div className="my-4 text-center">
-              <button
-                onClick={goToPreviousPage}
-                disabled={currentPage === 1}
-                className="mr-2 px-3 py-2 bg-indigo-900 text-white rounded"
-              >
-                Previous Page
-              </button>
-              <span>
-                Page {currentPage} of {numPages}
-              </span>
-              <button
-                onClick={goToNextPage}
-                disabled={currentPage === numPages}
-                className="ml-2 px-3 py-2 bg-indigo-900 text-white rounded"
-              >
-                Next Page
-              </button>
+            <div style={{ display: pdfLoaded ? "none" : "block" }}>
+        Loading...
+      </div>
+            </div>
             </div>
           </>
         )}
       </div>
     </div>
+    </>
   );
 }
 
