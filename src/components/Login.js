@@ -1,6 +1,8 @@
 // src/components/Login.js
 import { useState } from 'react';
 import { signInWithEmailAndPassword, auth } from '../config/firebase';
+import Image from "../logo.jpg";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -17,11 +19,29 @@ function Login({ onLogin }) {
 
   return (
     <div className="login-container">
+         <div className="logo">
+      <LazyLoadImage src={Image}
+        width={100} height={100}
+        alt="Image Alt"
+      />
+     </div>
       <div className="login-box">
         <h2>Login</h2>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="input-container">
+        <input type="email" placeholder="" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+        <label>Email</label>
+            </div>
+            <div className="input-container">
+          
+            <input type="password" placeholder="" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+            <label>Password</label>
+            </div>
+        
+        <div className="input-container">
         <button onClick={handleLogin}>Login</button>
+        
+        </div>
+       
       </div>
     </div>
   );
