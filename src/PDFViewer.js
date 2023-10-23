@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { getDownloadURL, ref } from "firebase/storage";
-import storage from "./config/firebase";
+import {storage} from "./config/firebase";
 import Image from "./logo.jpg";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Form from "./Form"
 // import { Worker } from '@react-pdf-viewer/core';
 // // Import the main component
 // import { Viewer } from '@react-pdf-viewer/core';
@@ -59,23 +57,7 @@ function PDFViewer() {
 
   return (
     <>
-      <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/edit-QRC">Edit Menu</Link>
-            </li>
-          </ul>
-        </nav>
-        <Routes>
-          <Route path="/edit-QRC" element={<Form />} />
-        </Routes>
-      </div>
-    </Router>
+  
     <div className="container">
       <div className="wrapper">
       <div className="logo">

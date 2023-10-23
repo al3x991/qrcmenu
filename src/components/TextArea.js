@@ -1,21 +1,33 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-function TextArea({ name, handleChange, role, rows, cols, defaultValue, hideLabel, value }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '6px', whiteSpace: 'pre-line' }}>
-      {!hideLabel && <label>{name}</label>}
-      <textarea
-        id={name}
-        name={name}
-        onChange={handleChange}
-        rows={rows}
-        cols={cols}
-        role={role}
-        defaultValue={defaultValue}
-        value={value}
-      />
-    </div>
-  );
+class TextArea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.defaultValue || '',
+    };
+  }
+
+  handleChange = (e) => {
+    this.setState({ value: e.target.value });
+  };
+
+  render() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '6px', whiteSpace: 'pre-line' }}>
+        {!this.props.hideLabel && <label>{this.props.name}</label>}
+        <textarea
+          id={this.props.name}
+          name={this.props.name}
+          onChange={this.handleChange}
+          rows={this.props.rows}
+          cols={this.props.cols}
+          role={this.props.role}
+          value={this.state.value}
+        />
+      </div>
+    );
+  }
 }
 
 export default TextArea;

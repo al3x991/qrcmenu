@@ -55,3 +55,134 @@ margin-bottom: 5px;
     
     overflow: hidden;
 }
+.qrcode{
+  display: flex;
+  justify-content: center;
+  max-width:300px;
+  padding: 0.5rem 1rem;
+  overflow: hidden;
+  border: 1px solid  #ccc;
+}
+
+.qrc-editor{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+  margin: auto;
+  padding: 25px;
+}
+.form{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.download-button{
+  background-color: #1d357b;
+  color: #fff;
+  border-radius: 5px;
+  padding: 6px 12px;
+  max-width: 50%;
+}
+.qrcCode{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.qrc-logo{
+  
+}
+.file-upload {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  margin-top: 8px;
+}
+
+.progress {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
+
+.upload-menu{
+  display: flex;
+  align-items: start;
+  border-radius: 28px;
+  background-color: #f7f7f7;
+    padding: 0px 12x;
+  justify-content: start;
+  margin: auto;
+    max-width: 800px;
+}
+
+/* src/components/Login.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* src/App.css */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* src/App.css */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
