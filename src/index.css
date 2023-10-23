@@ -66,7 +66,9 @@ margin-bottom: 5px;
 
 .qrc-editor{
   display: flex;
-  flex-direction: row;
+  max-width: 340px;
+  margin: auto;
+  padding: 12px 32px;
   justify-content: center;
   align-items: center;
   gap: 36px;
@@ -76,7 +78,10 @@ margin-bottom: 5px;
 .form{
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  padding: 24px 36px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .download-button{
   background-color: #1d357b;
@@ -236,4 +241,15 @@ button:hover {
   color: #ff0000; /* Error message color */
   font-size: 14px;
   margin-top: 5px;
+}
+
+@media (max-width: 1023px) {
+  .qrc-editor {
+    flex-direction: column;
+  }
+}
+@media (min-width: 1024px) {
+  .qrc-editor {
+    flex-direction: row;
+  }
 }

@@ -8,7 +8,7 @@ import { auth } from './config/firebase';
 
 function App() {
   const [state, setState] = useState({
-    value: 'https://lagospoloclub-menu.vercel.app',
+    value: 'https://lagospoloclub-menu.vercel.app/menu',
     ecLevel: 'L',
     enableCORS: false,
     size: 270,
